@@ -1,5 +1,7 @@
 package wordy.ast;
 
+import wordy.interpreter.EvaluationContext;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -72,4 +74,27 @@ public class ConditionalNode extends StatementNode {
     protected String describeAttributes() {
         return "(operator=" + operator + ')';
     }
+
+    @Override
+    protected void doRun(EvaluationContext context) {
+        double lhsValue = lhs.evaluate(context);
+        double rhsValue = rhs.evaluate(context);
+        boolean conditionTrue;
+        if (operator == Operator.EQUALS) {
+            conditionTrue = lhsValue == rhsValue;
+        } else if (operator == Operator.LESS_THAN) {
+            conditionTrue = lhsValue < rhsValue;
+        } else if (operator == Operator.GREATER_THAN) {
+            conditionTrue = lhsValue > rhsValue;
+        } else {
+            throw new IllegalStateException("Unknown operator: " + operator);
+        }
+
+        if (conditionTrue) {
+            ifTrue.run(context);
+        } else {
+            ifFalse.run(context);
+        }
+    }
+
 }
