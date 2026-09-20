@@ -4,6 +4,7 @@ import wordy.interpreter.EvaluationContext;
 
 import java.util.Map;
 import java.util.Objects;
+import java.io.PrintWriter;
 
 import static wordy.ast.Utils.orderedMap;
 
@@ -57,7 +58,7 @@ public class BinaryExpressionNode extends ExpressionNode {
             + '}';
     }
     @Override
-    protected double doEvaluate(EvaluationContext context) {
+    protected double doEvaluate(EvaluationContext context){
         double lhsValue = lhs.evaluate(context);
         double rhsValue = rhs.evaluate(context);
         if (operator == Operator.ADDITION) {
@@ -72,6 +73,30 @@ public class BinaryExpressionNode extends ExpressionNode {
             return Math.pow(lhsValue, rhsValue);
         } else {
             throw new IllegalStateException("Unknown operator: " + operator);
+        }
+    }
+
+    @Override
+    public void compile(PrintWriter out) {
+        if (operator == Operator.EXPONENTIATION) {
+            out.print("Math.pow(");
+            lhs.compile(out);
+            out.print(", ");
+            rhs.compile(out);
+            out.print(")");
+        } else {
+            out.print("(");
+            lhs.compile(out);
+            out.print(switch(operator) {
+                case ADDITION -> " + ";
+                case SUBTRACTION -> " - ";
+                case MULTIPLICATION -> " * ";
+                case DIVISION -> " / ";
+                default -> throw new IllegalStateException();
+            }
+            );
+            rhs.compile(out);
+            out.print(")");
         }
     }
 }
