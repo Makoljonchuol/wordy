@@ -68,7 +68,7 @@ public class AssignmentNode extends StatementNode {
     @Override
     public void compile(PrintWriter out){
         variable.compile(out);
-        out.print("=");
+        out.print(" = ");
         expression.compile(out);
         out.print(";");
     }
