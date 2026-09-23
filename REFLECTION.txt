@@ -1,0 +1,11 @@
+Comparing my solution to the reference solution, I noticed that the overall structure was pretty similar. I independently ended up using the same switch expressions and if/else chains in several places, especially in BinaryExpressionNode and ConditionalNode, which was nice to see.
+
+The biggest difference I noticed was the readability of the generated Java code. The reference solution uses out.println() to add line breaks, while I used out.print() everywhere, so my compiled programs come out as one long line. Both versions pass the same tests, but the reference solution is definitely easier to read.
+
+I also noticed that the reference ConditionalNode moves the comparison logic into a separate conditionMatches() helper method and uses a ternary to choose between ifTrue and ifFalse. I used an inline if/else instead. Seeing that made me realize that a small helper method can make the code easier to follow.
+
+I also caught an unused import in my AssignmentNode.java that I had missed before.
+
+
+One more thing, separate from comparing the two solutions, running the Mandelbrot shader with my interpreter versus my compiler made the whole point of this assignment click for me, and was exciting. 
+The interpreted version rendered in 2661ms; the compiled version rendered in 91ms, about 29 times faster, for the exact same image. watching my own code run 29x faster once it became real Java bytecode instead of a tree-walk is pretty cool.
